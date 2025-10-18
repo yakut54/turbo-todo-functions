@@ -1,0 +1,65 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ──────────────── ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ────────────────
+
+    // Проверяет, является ли текущий пользователь владельцем документа
+    function isOwner(docPath) {
+      return request.auth != null &&
+             get(docPath).data.ownerId == request.auth.uid;
+    }
+
+    // Проверяет, что при создании ownerId совпадает с UID
+    function isValidOwner() {
+      return request.resource.data.ownerId == request.auth.uid;
+    }
+
+    // Обязательные поля для задач
+    function hasValidTaskFields() {
+      return request.resource.data.keys().hasAll(['title', 'listId', 'ownerId']);
+    }
+
+    // Обязательные поля для списков
+    function hasValidListFields() {
+      return request.resource.data.keys().hasAll(['title', 'ownerId']);
+    }
+
+
+    // ──────────────── КОЛЛЕКЦИИ ────────────────
+
+    // 👤 Профиль пользователя: только свой
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // 📋 Списки задач: только владелец
+    match /lists/{listId} {
+      allow read, write: if isOwner(/databases/$(database)/documents/lists/$(listId));
+      allow create: if request.auth != null &&
+                    isValidOwner() &&
+                    hasValidListFields();
+    }
+
+    // ✅ Задачи: только владелец
+    match /tasks/{taskId} {
+      allow read, write: if isOwner(/databases/$(database)/documents/tasks/$(taskId));
+      allow create: if request.auth != null &&
+                    isValidOwner() &&
+                    hasValidTaskFields();
+    }
+
+    // 🔔 Напоминания: только владелец
+    match /reminders/{reminderId} {
+      allow read, write: if isOwner(/databases/$(database)/documents/reminders/$(reminderId));
+      allow create: if request.auth != null &&
+                    isValidOwner();
+    }
+
+    // ⏳ Служебная коллекция для статистики (опционально)
+    match /stats/{statId} {
+      allow read: if isOwner(/databases/$(database)/documents/stats/$(statId));
+      allow write: if request.auth != null; // Cloud Function будет писать
+    }
+  }
+}
