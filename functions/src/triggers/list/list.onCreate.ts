@@ -25,7 +25,7 @@ export const onCreateList = onDocumentCreated(
       .withConverter(createConverter<List>())
       .get()
 
-    const allLists = snapshot.docs.map((doc) => doc.data())
+    const allLists: List[] = snapshot.docs.map((doc) => doc.data())
     logger.debug('All lists', { allLists })
   },
 )
