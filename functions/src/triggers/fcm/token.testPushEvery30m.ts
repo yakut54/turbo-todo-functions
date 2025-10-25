@@ -1,8 +1,8 @@
 import { onSchedule } from 'firebase-functions/v2/scheduler'
 import { logger } from 'firebase-functions'
-import { sendPushToUser } from '../../lib'
-import { User } from '../../types/models/todo-model'
-import { firestore } from '../../lib/firebaseAdmin'
+import { sendPushToUser } from 'src/lib'
+import { User } from 'src/types/models/todo-model'
+import { firestore } from 'src/lib/firebaseAdmin'
 
 /**
  * Отправляет тестовое push-уведомление каждые 30 минут (для отладки).
@@ -29,7 +29,7 @@ export const testPushEvery30m = onSchedule(
 
         return sendPushToUser(
           doc.id,
-          'бах',
+          '1234567890 1234567890 1234567890 1234567890 ---',
           'бабах!!',
         )
       })

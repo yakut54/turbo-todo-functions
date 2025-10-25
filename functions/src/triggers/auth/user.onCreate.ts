@@ -1,13 +1,8 @@
 import { onDocumentCreated } from 'firebase-functions/v2/firestore'
 import { Timestamp } from 'firebase-admin/firestore'
-import { getApps, initializeApp } from 'firebase-admin/app'
-import { Themes, User } from '../../types/models/todo-model'
-import { USER_AVATAR } from '../../types/constants/constants'
+import { Themes, User } from 'src/types/models/todo-model'
+import { USER_AVATAR } from 'src/types/constants/constants'
 import { logger } from 'firebase-functions'
-
-if (getApps().length === 0) {
-  initializeApp()
-}
 
 export const onCreateUser = onDocumentCreated(
   {

@@ -17,6 +17,8 @@
       <option name="SPACE_BEFORE_FUNCTION_LEFT_PARENTH" value="false" />
       <option name="FORCE_QUOTE_STYlE" value="true" />
       <option name="ENFORCE_TRAILING_COMMA" value="WhenMultiline" />
+      <option name="BLACKLIST_IMPORTS" value="i1,@angular/material/typings/**,**/lib/**,**/dist/**" />
+      <option name="IMPORT_PREFER_ABSOLUTE_PATH" value="TRUE" />
     </TypeScriptCodeStyleSettings>
     <codeStyleSettings language="CSS">
       <indentOptions>

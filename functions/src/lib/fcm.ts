@@ -1,4 +1,4 @@
-import { User } from '../types/models/todo-model'
+import { User } from 'src/types/models/todo-model'
 import { logger } from 'firebase-functions'
 import { firestore, messaging } from './firebaseAdmin'
 

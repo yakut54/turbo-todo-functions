@@ -1,10 +1,6 @@
 import { onCall } from 'firebase-functions/v2/https'
-import { getApps, initializeApp } from 'firebase-admin/app'
 import { logger } from 'firebase-functions'
 
-if (getApps().length === 0) {
-  initializeApp()
-}
 
 export const onDeleteList = onCall(
   {

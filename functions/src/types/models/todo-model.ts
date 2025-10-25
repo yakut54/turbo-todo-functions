@@ -52,11 +52,11 @@ export interface User {
 }
 
 export interface List extends BaseDocument {
-  owner_id?: string;
-  title?: string;
-  color?: string;
+  owner_id: string;
+  title: string;
+  color: string;
+  icon: string;
   order?: number;
-  icon?: string;
   is_archived?: boolean;
   task_count?: number;
 }
