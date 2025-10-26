@@ -41,7 +41,7 @@ export const onCreateList = onDocumentCreated(
 
       logger.debug('order', { order })
 
-      const defaultValue: List = {
+      const newListItem: List = {
         owner_id: ownerId,
         title: incomingData.title ?? 'WTF???',
         color: incomingData.color ?? '#f044dd',
@@ -53,9 +53,12 @@ export const onCreateList = onDocumentCreated(
         order,
       }
 
-      logger.debug('defaultValue', { defaultValue })
-    } catch (e) {
-      logger.error(e)
+      await listRef.update({ ...newListItem })
+
+      logger.debug('✅ Дополнены поля для list item:', listId, newListItem)
+    } catch (error) {
+      logger.error('❌ Ошибка при формировании list item:', error)
+      logger.error(error)
     }
   },
 )

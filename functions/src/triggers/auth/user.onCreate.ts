@@ -42,9 +42,9 @@ export const onCreateUser = onDocumentCreated(
 
       if (userRef && Object.keys(updates).length > 0) {
         await userRef.update(updates)
-        logger.log('✅ Дополнены поля для пользователя:', userId, updates)
+        logger.debug('✅ Дополнены поля для пользователя:', userId, updates)
       } else {
-        logger.log('✅ Все поля уже заполнены для:', userId)
+        logger.debug('✅ Все поля уже заполнены для:', userId)
       }
     } catch (error) {
       logger.error('❌ Ошибка при инициализации пользователя:', error)
