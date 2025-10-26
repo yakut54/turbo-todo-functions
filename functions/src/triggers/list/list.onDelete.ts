@@ -9,7 +9,7 @@ export const onDeleteList = onCall(
   async (request) => {
     const { listId } = request.data ?? 'хуй!!'
     // твоя логика удаления по id
-    logger.log('Вызвана deleteList для:', listId)
+    logger.debug('Вызвана deleteList для:', listId)
     // Можно реализовать каскадное удаление тут по логике
     // ...
     // Возврат ответа

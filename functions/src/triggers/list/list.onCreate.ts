@@ -28,38 +28,37 @@ export const onCreateList = onDocumentCreated(
     }
 
     try {
-      const maxOrderSnapshot = await firestore
-        .collection('lists')
-        .withConverter(createConverter<List>())
-        .where('owner_id', '==', ownerId)
-        .orderBy('order', 'desc')
-        .limit(1)
-        .get()
+      await firestore.runTransaction(async (transaction) => {
+        const maxOrderSnapshot = await transaction.get(
+          firestore.collection('lists')
+            .withConverter(createConverter<List>())
+            .where('owner_id', '==', ownerId)
+            .orderBy('order', 'desc')
+            .limit(1),
+        )
 
-      const maxOrder = maxOrderSnapshot.empty ? 0 : (maxOrderSnapshot.docs[0].data().order || 0)
-      const order = maxOrder + 1
+        const maxOrder = maxOrderSnapshot.empty ? 0 : (maxOrderSnapshot.docs[0].data().order || 0)
+        const order = maxOrder + 1
 
-      logger.debug('order', { order })
+        const newListItem: Partial<List> = {
+          order,
+          owner_id: ownerId,
+          updated_time: Timestamp.now(),
+          created_time: Timestamp.now(),
+          title: incomingData.title ?? 'WTF???',
+          color: incomingData.color ?? '#f044dd',
+          icon: incomingData.icon ?? 'person',
+          is_archived: false,
+          task_count: 0,
+        }
 
-      const newListItem: List = {
-        owner_id: ownerId,
-        title: incomingData.title ?? 'WTF???',
-        color: incomingData.color ?? '#f044dd',
-        icon: incomingData.icon ?? 'person',
-        created_time: Timestamp.now(),
-        updated_time: Timestamp.now(),
-        is_archived: false,
-        task_count: 0,
-        order,
-      }
+        transaction.update(listRef, newListItem)
 
-      await listRef.update({ ...newListItem })
-
-      logger.debug('✅ Дополнены поля для list item:', listId, newListItem)
+        logger.debug('✅ Обновлены поля для list item в транзакции:', listId, newListItem)
+      })
     } catch (error) {
-      logger.error('❌ Ошибка при формировании list item:', error)
-      logger.error(error)
+      logger.error('❌ Ошибка при формировании list item в транзакции:', error)
+      throw error
     }
   },
 )
-

@@ -25,7 +25,7 @@ export const testPushEvery30m = onSchedule(
         const userName = userData.display_name || 'Anonymous'
 
         // Логируем для каждого пользователя
-        logger.log(`🔔 Тестовый пуш для ${userName} (${doc.id}) — \n14:30 NSK 154`)
+        logger.debug(`🔔 Тестовый пуш для ${userName} (${doc.id}) — \n14:30 NSK 154`)
 
         return sendPushToUser(
           doc.id,
@@ -37,6 +37,6 @@ export const testPushEvery30m = onSchedule(
     const results = await Promise.allSettled(pushPromises)
     const successfulCount = results.filter((result) => result.status === 'fulfilled').length
 
-    logger.log(`✅ Отправлено ${successfulCount} уведомлений для ${pushPromises.length} пользователей!`)
+    logger.debug(`✅ Отправлено ${successfulCount} уведомлений для ${pushPromises.length} пользователей!`)
   },
 )
